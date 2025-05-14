@@ -1,10 +1,7 @@
 package com.pcmaster.AFK.advisorymanagement.application.internal.queryservices;
 
 import com.pcmaster.AFK.advisorymanagement.domain.model.aggregates.Advisory;
-import com.pcmaster.AFK.advisorymanagement.domain.model.queries.GetAdvisoriesByAdvisorIdQuery;
-import com.pcmaster.AFK.advisorymanagement.domain.model.queries.GetAdvisoriesByAdvisoryStatusQuery;
-import com.pcmaster.AFK.advisorymanagement.domain.model.queries.GetAdvisoriesByCustomerIdQuery;
-import com.pcmaster.AFK.advisorymanagement.domain.model.queries.GetAdvisoryByIdQuery;
+import com.pcmaster.AFK.advisorymanagement.domain.model.queries.*;
 import com.pcmaster.AFK.advisorymanagement.domain.services.AdvisoryQueryService;
 import com.pcmaster.AFK.advisorymanagement.infrastructure.persistence.jpa.repositories.AdvisoryRepository;
 import org.springframework.stereotype.Service;
@@ -25,6 +22,11 @@ public class AdvisoryQueryServiceImpl implements AdvisoryQueryService {
     @Override
     public List<Advisory> handle(GetAdvisoriesByAdvisoryStatusQuery query) {
         return advisoryRepository.findByAdvisoryStatus(query.advisoryStatus());
+    }
+
+    @Override
+    public List<Advisory> handle(GetAdvisoriesByAdvisoryTypeQuery query) {
+        return advisoryRepository.findByAdvisoryType(query.advisoryType());
     }
 
     @Override
