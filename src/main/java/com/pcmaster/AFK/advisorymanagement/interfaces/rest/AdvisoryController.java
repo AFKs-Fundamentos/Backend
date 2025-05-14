@@ -1,12 +1,10 @@
 package com.pcmaster.AFK.advisorymanagement.interfaces.rest;
 
 import com.pcmaster.AFK.advisorymanagement.domain.model.commands.DeleteAdvisoryCommand;
-import com.pcmaster.AFK.advisorymanagement.domain.model.queries.GetAdvisoriesByAdvisorIdQuery;
-import com.pcmaster.AFK.advisorymanagement.domain.model.queries.GetAdvisoriesByAdvisoryStatusQuery;
-import com.pcmaster.AFK.advisorymanagement.domain.model.queries.GetAdvisoriesByCustomerIdQuery;
-import com.pcmaster.AFK.advisorymanagement.domain.model.queries.GetAdvisoryByIdQuery;
+import com.pcmaster.AFK.advisorymanagement.domain.model.queries.*;
 import com.pcmaster.AFK.advisorymanagement.domain.model.valueobjects.AdvisorId;
 import com.pcmaster.AFK.advisorymanagement.domain.model.valueobjects.AdvisoryStatus;
+import com.pcmaster.AFK.advisorymanagement.domain.model.valueobjects.AdvisoryType;
 import com.pcmaster.AFK.advisorymanagement.domain.model.valueobjects.CustomerId;
 import com.pcmaster.AFK.advisorymanagement.domain.services.AdvisoryCommandService;
 import com.pcmaster.AFK.advisorymanagement.domain.services.AdvisoryQueryService;
@@ -104,7 +102,8 @@ public class AdvisoryController {
             @ApiResponse(responseCode = "200", description = "Advisories found"),
             @ApiResponse(responseCode = "404", description = "Advisories not found")})
     public ResponseEntity<List<AdvisoryResource>> getAdvisoriesByCustomerId(@PathVariable Long customerId) {
-        var getAdvisoriesByCustomerIdQuery = new GetAdvisoriesByCustomerIdQuery(customerId);
+        CustomerId id = new CustomerId(customerId);
+        var getAdvisoriesByCustomerIdQuery = new GetAdvisoriesByCustomerIdQuery(id);
         var advisoryList = this.advisoryQueryService.handle(getAdvisoriesByCustomerIdQuery);
         if(advisoryList.isEmpty()) { return ResponseEntity.notFound().build(); }
         var advisoryResourceList = advisoryList.stream()
@@ -119,7 +118,8 @@ public class AdvisoryController {
             @ApiResponse(responseCode = "200", description = "Advisories found"),
             @ApiResponse(responseCode = "404", description = "Advisories not found")})
     public ResponseEntity<List<AdvisoryResource>> getAdvisoriesByAdvisorId(@PathVariable Long advisorId) {
-        var getAdvisoriesByAdvisorIdQuery = new GetAdvisoriesByAdvisorIdQuery(advisorId);
+        AdvisorId id = new AdvisorId(advisorId);
+        var getAdvisoriesByAdvisorIdQuery = new GetAdvisoriesByAdvisorIdQuery(id);
         var advisoryList = this.advisoryQueryService.handle(getAdvisoriesByAdvisorIdQuery);
         if(advisoryList.isEmpty()) { return ResponseEntity.notFound().build(); }
         var advisoryResourceList = advisoryList.stream()
@@ -136,6 +136,22 @@ public class AdvisoryController {
     public ResponseEntity<List<AdvisoryResource>> getAdvisoriesByAdvisoryStatus(@PathVariable AdvisoryStatus status) {
         var getAdvisoriesByAdvisoryStatusQuery = new GetAdvisoriesByAdvisoryStatusQuery(status);
         var advisoryList = this.advisoryQueryService.handle(getAdvisoriesByAdvisoryStatusQuery);
+        if(advisoryList.isEmpty()) { return ResponseEntity.notFound().build(); }
+        var advisoryResourceList = advisoryList.stream()
+                .map(AdvisoryResourceFromEntityAssembler::toResourceFromEntity)
+                .toList();
+        return ResponseEntity.ok(advisoryResourceList);
+
+    }
+
+    @GetMapping({"/advisory/type/{type}"})
+    @Operation(summary = "Get all advisories by customer id")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "Advisories found"),
+            @ApiResponse(responseCode = "404", description = "Advisories not found")})
+    public ResponseEntity<List<AdvisoryResource>> getAdvisoriesByAdvisoryStatus(@PathVariable AdvisoryType type) {
+        var getAdvisoriesByAdvisoryTypeQuery = new GetAdvisoriesByAdvisoryTypeQuery(type);
+        var advisoryList = this.advisoryQueryService.handle(getAdvisoriesByAdvisoryTypeQuery);
         if(advisoryList.isEmpty()) { return ResponseEntity.notFound().build(); }
         var advisoryResourceList = advisoryList.stream()
                 .map(AdvisoryResourceFromEntityAssembler::toResourceFromEntity)
