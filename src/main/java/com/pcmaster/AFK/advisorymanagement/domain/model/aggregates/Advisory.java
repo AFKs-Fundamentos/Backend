@@ -2,7 +2,6 @@ package com.pcmaster.AFK.advisorymanagement.domain.model.aggregates;
 
 
 import com.pcmaster.AFK.advisorymanagement.domain.model.commands.CreateAdvisoryCommand;
-import com.pcmaster.AFK.advisorymanagement.domain.model.commands.UpdateAdvisoryCommand;
 import com.pcmaster.AFK.advisorymanagement.domain.model.valueobjects.AdvisorId;
 import com.pcmaster.AFK.advisorymanagement.domain.model.valueobjects.AdvisoryStatus;
 import com.pcmaster.AFK.advisorymanagement.domain.model.valueobjects.AdvisoryType;
@@ -12,6 +11,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -22,6 +22,7 @@ import java.time.LocalTime;
 @Table(name = "advisories")
 @Setter
 @Getter
+@NoArgsConstructor
 public class Advisory extends AuditableAbstractAggregateRoot<Advisory> {
 
     @Column(name = "advisory_type", nullable = false)
@@ -86,8 +87,8 @@ public class Advisory extends AuditableAbstractAggregateRoot<Advisory> {
     public Advisory (CreateAdvisoryCommand command) {
         this.advisoryType = command.advisoryType();
         this.advisoryStatus = command.advisoryStatus();
-        this.advisorId = new AdvisorId(command.advisorId().advisorId());
-        this.customerId = new CustomerId(command.customerId().customerId());
+        this.advisorId = new AdvisorId(command.advisorId());
+        this.customerId = new CustomerId(command.customerId());
         this.advisoryDate = command.advisoryDate();
         this.advisoryTime = command.advisoryTime();
         this.meetUrl = command.meetUrl();
@@ -99,8 +100,8 @@ public class Advisory extends AuditableAbstractAggregateRoot<Advisory> {
     public Advisory udpdateInformation(
             AdvisoryType advisoryType,
             AdvisoryStatus advisoryStatus,
-            AdvisorId advisorId,
-            CustomerId customerId,
+            Long advisorId,
+            Long customerId,
             LocalDate advisoryDate,
             LocalTime advisoryTime,
             String meetUrl,
@@ -108,10 +109,10 @@ public class Advisory extends AuditableAbstractAggregateRoot<Advisory> {
             String advisoryDescription,
             String location
     ) {
-        this.advisoryType = AdvisoryType.VIRTUAL;
-        this.advisoryStatus = AdvisoryStatus.PENDING;
-        this.advisorId = new AdvisorId(advisorId.advisorId());
-        this.customerId = new CustomerId(customerId.customerId());
+        this.advisoryType = advisoryType;
+        this.advisoryStatus = advisoryStatus;
+        this.advisorId = new AdvisorId(advisorId);
+        this.customerId = new CustomerId(customerId);
         this.advisoryDate = advisoryDate;
         this.advisoryTime = advisoryTime;
         this.meetUrl = meetUrl;
@@ -120,8 +121,6 @@ public class Advisory extends AuditableAbstractAggregateRoot<Advisory> {
         this.location = location;
         return this;
     }
-
-    public Advisory(){}
 
 
 }
