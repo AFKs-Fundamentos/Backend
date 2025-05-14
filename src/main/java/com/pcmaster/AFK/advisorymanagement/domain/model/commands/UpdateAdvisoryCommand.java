@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public record UpdateAdvisoryCommand(
-        Long id,
+        Long advisoryId,
         AdvisoryType advisoryType,
         AdvisoryStatus advisoryStatus,
         Long advisorId,
