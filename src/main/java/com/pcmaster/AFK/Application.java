@@ -1,11 +1,15 @@
 package com.pcmaster.AFK;
 
+import com.pcmaster.AFK.advisorymanagement.google.GoogleMeetProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.stereotype.Component;
 
 @SpringBootApplication
 @EnableJpaAuditing
+@Component
 public class Application {
 
 	public static void main(String[] args) {
