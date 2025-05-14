@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public record UpdateAdvisoryResource(
-        Long advisoryId,
         AdvisoryType advisoryType,
         AdvisoryStatus advisoryStatus,
         Long advisorId,

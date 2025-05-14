@@ -4,9 +4,9 @@ import com.pcmaster.AFK.advisorymanagement.domain.model.commands.UpdateAdvisoryC
 import com.pcmaster.AFK.advisorymanagement.interfaces.rest.resources.UpdateAdvisoryResource;
 
 public class UpdateAdvisoryCommandFromResourceAssembler {
-    public static UpdateAdvisoryCommand toCommandFromResource(UpdateAdvisoryResource resource) {
+    public static UpdateAdvisoryCommand toCommandFromResource(Long advisoryId, UpdateAdvisoryResource resource) {
         return new UpdateAdvisoryCommand(
-                resource.advisoryId(),
+                advisoryId,
                 resource.advisoryType(),
                 resource.advisoryStatus(),
                 resource.advisorId(),
