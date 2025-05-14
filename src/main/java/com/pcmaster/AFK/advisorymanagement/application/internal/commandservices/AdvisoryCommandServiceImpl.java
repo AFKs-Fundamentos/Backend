@@ -61,20 +61,35 @@ public class AdvisoryCommandServiceImpl implements AdvisoryCommandService {
     @Override
     public Optional<Advisory> handle(UpdateAdvisoryCommand command) {
         //implementar reglas de negocio
-        var res = advisoryRepository.findById(command.id());
-        if (res.isEmpty()) {
-            throw new IllegalArgumentException("Advisory with id %s not found".formatted(command.id()));
+        var existsAdvisoryId = advisoryRepository.existsById(command.advisoryId());
+        if (!existsAdvisoryId) {
+            throw new IllegalArgumentException("Advisory with id %s not found".formatted(command.advisoryId()));
         }
 
-        Advisory advisory = res.get();
+        var result = this.advisoryRepository.findById(command.advisoryId());
+        var advisoryToUpdate = result.get();
+        advisoryToUpdate.udpdateInformation(
+                command.advisoryType(),
+                command.advisoryStatus(),
+                command.advisorId(),
+                command.customerId(),
+                command.advisoryDate(),
+                command.advisoryTime(),
+                command.meetUrl(),
+                command.clientEmail(),
+                command.advisoryDescription(),
+                command.location()
+        );
 
         try{
-            advisoryRepository.save(advisory);
-            return Optional.of(advisory);
+            var updatedAdvisory = advisoryRepository.save(advisoryToUpdate);
+            return Optional.of(updatedAdvisory);
         }
         catch (Exception e) {
             throw new IllegalArgumentException("Error updating advisory: %s".formatted(e.getMessage()));
         }
 
     }
+
+
 }
