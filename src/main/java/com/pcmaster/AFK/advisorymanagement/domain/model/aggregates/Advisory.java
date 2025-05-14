@@ -24,11 +24,11 @@ import java.time.LocalTime;
 @Getter
 public class Advisory extends AuditableAbstractAggregateRoot<Advisory> {
 
-    @Embedded
+    @Column(name = "advisory_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private AdvisoryType advisoryType;
 
-    @Embedded
+    @Column(name = "advisory_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private AdvisoryStatus advisoryStatus;
 
@@ -83,11 +83,11 @@ public class Advisory extends AuditableAbstractAggregateRoot<Advisory> {
         this.location = location;
     }
 
-    public Advisory(CreateAdvisoryCommand command) {
+    public Advisory (CreateAdvisoryCommand command) {
         this.advisoryType = command.advisoryType();
         this.advisoryStatus = command.advisoryStatus();
-        this.advisorId = new AdvisorId(command.advisorId());
-        this.customerId = new CustomerId(command.customerId());
+        this.advisorId = new AdvisorId(command.advisorId().advisorId());
+        this.customerId = new CustomerId(command.customerId().customerId());
         this.advisoryDate = command.advisoryDate();
         this.advisoryTime = command.advisoryTime();
         this.meetUrl = command.meetUrl();
@@ -96,17 +96,29 @@ public class Advisory extends AuditableAbstractAggregateRoot<Advisory> {
         this.location = command.location();
     }
 
-    public Advisory(UpdateAdvisoryCommand command){
-        this.advisoryType = command.advisoryType();
-        this.advisoryStatus = command.advisoryStatus();
-        this.advisorId = new AdvisorId(command.advisorId());
-        this.customerId = new CustomerId(command.customerId());
-        this.advisoryDate = command.advisoryDate();
-        this.advisoryTime = command.advisoryTime();
-        this.meetUrl = command.meetUrl();
-        this.clientEmail = command.clientEmail();
-        this.advisoryDescription = command.advisoryDescription();
-        this.location = command.location();
+    public Advisory udpdateInformation(
+            AdvisoryType advisoryType,
+            AdvisoryStatus advisoryStatus,
+            AdvisorId advisorId,
+            CustomerId customerId,
+            LocalDate advisoryDate,
+            LocalTime advisoryTime,
+            String meetUrl,
+            String clientEmail,
+            String advisoryDescription,
+            String location
+    ) {
+        this.advisoryType = AdvisoryType.VIRTUAL;
+        this.advisoryStatus = AdvisoryStatus.PENDING;
+        this.advisorId = new AdvisorId(advisorId.advisorId());
+        this.customerId = new CustomerId(customerId.customerId());
+        this.advisoryDate = advisoryDate;
+        this.advisoryTime = advisoryTime;
+        this.meetUrl = meetUrl;
+        this.clientEmail = clientEmail;
+        this.advisoryDescription = advisoryDescription;
+        this.location = location;
+        return this;
     }
 
     public Advisory(){}
