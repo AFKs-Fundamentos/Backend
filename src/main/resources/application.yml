@@ -1,0 +1,19 @@
+google:
+  meet:
+    credentials-file: classpath:credentials.json
+    tokens-dir: ./tokens
+    redirect-uri: http://localhost:51843/api/v1/meets/callback
+    scopes:
+      - https://www.googleapis.com/auth/meetings.space.created
+      - https://www.googleapis.com/auth/calendar
+      - https://www.googleapis.com/auth/cloud-platform
+      - https://www.googleapis.com/auth/cloud-platform.read-only
+      - https://www.googleapis.com/auth/meetings.space.created
+      - https://www.googleapis.com/auth/meetings.space.readonly
+      - https://www.googleapis.com/auth/service.management
+      - https://www.googleapis.com/auth/service.management.readonly
+      - https://www.googleapis.com/auth/iam.test
+      - https://www.googleapis.com/auth/meetings.space.settings
+      - https://www.googleapis.com/auth/userinfo.profile
+      - https://www.googleapis.com/auth/userinfo.email
+      - https://www.googleapis.com/auth/drive.metadata.readonly
