@@ -9,6 +9,9 @@ import com.pcmaster.AFK.iam.interfaces.rest.transform.AuthenticatedUserResourceF
 import com.pcmaster.AFK.iam.interfaces.rest.transform.SignInCommandFromResourceAssembler;
 import com.pcmaster.AFK.iam.interfaces.rest.transform.SignUpCommandFromResourceAssembler;
 import com.pcmaster.AFK.iam.interfaces.rest.transform.UserResourceFromEntityAssembler;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -45,6 +48,10 @@ public class AuthenticationController {
    * @return the authenticated user resource.
    */
   @PostMapping("/sign-in")
+  @Operation(summary = "Handles the sign-in request")
+  @ApiResponses( value = {
+          @ApiResponse(responseCode = "200", description = "User signed in successfully"),
+          @ApiResponse(responseCode = "404", description = "User not found")})
   public ResponseEntity<AuthenticatedUserResource> signIn(
       @RequestBody SignInResource signInResource) {
 
@@ -67,6 +74,10 @@ public class AuthenticationController {
    * @return the created user resource.
    */
   @PostMapping("/sign-up")
+  @Operation(summary = "Handles the sign-up request")
+  @ApiResponses( value = {
+          @ApiResponse(responseCode = "200", description = "User signed up successfully")
+          , @ApiResponse(responseCode = "400", description = "Bad request")})
   public ResponseEntity<UserResource> signUp(@RequestBody SignUpResource signUpResource) {
     var signUpCommand = SignUpCommandFromResourceAssembler
         .toCommandFromResource(signUpResource);
