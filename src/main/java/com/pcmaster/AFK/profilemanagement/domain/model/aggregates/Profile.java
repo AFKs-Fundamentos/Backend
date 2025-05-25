@@ -2,6 +2,7 @@ package com.pcmaster.AFK.profilemanagement.domain.model.aggregates;
 
 
 import com.pcmaster.AFK.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
+import com.pcmaster.AFK.profilemanagement.domain.model.commands.CreateProfileCommand;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -35,10 +36,10 @@ public class Profile extends AuditableAbstractAggregateRoot<Profile> {
     }
 
     public Profile(CreateProfileCommand command){
-        this.firstName = command.getFirstName();
-        this.lastName = command.getLastName();
-        this.email = command.getEmail();
-        this.phone = command.getPhone();
+        this.firstName = command.firstName();
+        this.lastName = command.lastName();
+        this.email = command.email();
+        this.phone = command.phone();
     }
 
     public Profile updateProfile(String firstName, String lastName, String email, String phone) {
