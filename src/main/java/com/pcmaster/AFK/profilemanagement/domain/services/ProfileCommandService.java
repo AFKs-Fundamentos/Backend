@@ -9,7 +9,7 @@ import com.pcmaster.AFK.profilemanagement.domain.model.commands.UpdateProfileCom
 import java.util.Optional;
 
 public interface ProfileCommandService {
-    Optional<Profile> handle(CreateProfileCommand command);
-    Void handle(DeleteProfileCommand command);
+    Long handle(CreateProfileCommand command);
+    void handle(DeleteProfileCommand command);
     Optional<Profile> handle(UpdateProfileCommand command);
 }

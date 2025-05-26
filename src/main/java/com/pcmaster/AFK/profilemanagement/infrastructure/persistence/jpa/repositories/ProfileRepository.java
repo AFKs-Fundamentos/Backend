@@ -9,6 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
-    Optional<Profile> findById(Long profileId);
-    boolean existsById(Long profileId);
+    boolean existsById(Long id);
 }

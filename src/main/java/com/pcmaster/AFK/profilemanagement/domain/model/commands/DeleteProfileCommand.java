@@ -1,4 +1,4 @@
 package com.pcmaster.AFK.profilemanagement.domain.model.commands;
 
-public record DeleteProfileCommand(Long profileId) {
+public record DeleteProfileCommand(Long id) {
 }
