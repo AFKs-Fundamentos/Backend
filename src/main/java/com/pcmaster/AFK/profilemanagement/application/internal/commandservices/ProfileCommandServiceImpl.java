@@ -6,9 +6,11 @@ import com.pcmaster.AFK.profilemanagement.domain.model.commands.DeleteProfileCom
 import com.pcmaster.AFK.profilemanagement.domain.model.commands.UpdateProfileCommand;
 import com.pcmaster.AFK.profilemanagement.domain.services.ProfileCommandService;
 import com.pcmaster.AFK.profilemanagement.infrastructure.persistence.jpa.repositories.ProfileRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class ProfileCommandServiceImpl implements ProfileCommandService{
 
     private final ProfileRepository profileRepository;
