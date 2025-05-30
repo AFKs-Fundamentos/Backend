@@ -8,6 +8,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import java.util.List;
 
@@ -33,6 +36,10 @@ public class RolesController {
    * @see RoleResource
    */
   @GetMapping
+  @Operation(summary = "Get all roles")
+  @ApiResponses(value = {
+     @ApiResponse(responseCode = "200", description = "Roles retrieved successfully"),
+     @ApiResponse(responseCode = "404", description = "Roles not found")})
   public ResponseEntity<List<RoleResource>> getAllRoles() {
     var getAllRolesQuery = new GetAllRolesQuery();
     var roles = roleQueryService.handle(getAllRolesQuery);

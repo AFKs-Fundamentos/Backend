@@ -18,6 +18,8 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
+
 
 import java.util.List;
 
@@ -90,25 +92,12 @@ public class WebSecurityConfiguration {
    */
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.cors(corsConfigurer -> corsConfigurer.configurationSource( request -> {
-      var cors = new CorsConfiguration();
-      cors.setAllowedOrigins(List.of("*"));
-      cors.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE"));
-      cors.setAllowedHeaders(List.of("*"));
-      return cors;
-    } ));
-    http.csrf(csrfConfigurer -> csrfConfigurer.disable())
-        .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(unauthorizedRequestHandler))
-        .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(
-            authorizeRequests -> authorizeRequests.requestMatchers(
-                "/api/v1/authentication/**", "/v3/api-docs/**", "/swagger-ui.html",
-                "/swagger-ui/**", "/swagger-resources/**", "/webjars/**")
-                .permitAll()
-                .anyRequest()
-                .authenticated());
-    http.authenticationProvider(authenticationProvider());
-    http.addFilterBefore(authorizationRequestFilter(), UsernamePasswordAuthenticationFilter.class);
+    http
+            .authorizeHttpRequests(auth -> auth
+                    .anyRequest().permitAll()
+            )
+            .csrf(CsrfConfigurer::disable); // ← nueva forma funcional de desactivar CSRF
+
     return http.build();
   }
 

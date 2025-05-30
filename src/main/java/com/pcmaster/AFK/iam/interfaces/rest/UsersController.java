@@ -5,6 +5,9 @@ import com.pcmaster.AFK.iam.domain.model.queries.GetUserByIdQuery;
 import com.pcmaster.AFK.iam.domain.services.UserQueryService;
 import com.pcmaster.AFK.iam.interfaces.rest.resources.UserResource;
 import com.pcmaster.AFK.iam.interfaces.rest.transform.UserResourceFromEntityAssembler;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +40,10 @@ public class UsersController {
    * @see UserResource
    */
   @GetMapping
+  @Operation(summary = "Get all users")
+  @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Users retrieved successfully"),
+        @ApiResponse(responseCode = "404", description = "Users not found")})
   public ResponseEntity<List<UserResource>> getAllUsers() {
     var getAllUsersQuery = new GetAllUsersQuery();
     var users = userQueryService.handle(getAllUsersQuery);
@@ -55,6 +62,10 @@ public class UsersController {
    * @see UserResource
    */
   @GetMapping(value = "/{userId}")
+  @Operation(summary = "Get user by id")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "User retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "User not found")})
   public ResponseEntity<UserResource> getUserById(@PathVariable Long userId) {
     var getUserByIdQuery = new GetUserByIdQuery(userId);
     var user = userQueryService.handle(getUserByIdQuery);
