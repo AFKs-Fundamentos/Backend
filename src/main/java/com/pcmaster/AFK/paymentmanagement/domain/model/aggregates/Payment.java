@@ -4,28 +4,32 @@ import com.pcmaster.AFK.paymentmanagement.domain.model.commands.CreatePaymentCom
 import com.pcmaster.AFK.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import com.pcmaster.AFK.paymentmanagement.domain.model.valueobjects.Currency;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Setter
+@Getter
 @Table(name = "payments")
 public class Payment extends AuditableAbstractAggregateRoot<Payment> {
-    private Long id;
+    private int amount;
 
-    private Long amount;
-
-    private String currency;
-
-    private String stripePaymentId;
+    private Currency currency;
 
     private String status;
 
-    public Payment() {
-        // Default constructor for JPA
+    public Payment(int amount,
+                   Currency currency,
+                   String status) {
+        this.amount = amount;
+        this.currency = Currency.USD;
+        this.status = status;
     }
 
     public Payment(CreatePaymentCommand command) {
         this.amount = command.amount();
         this.currency = command.currency();
-        this.stripePaymentId = command.stripePaymentId();
         this.status = command.status();
     }
 }

@@ -1,7 +1,8 @@
 package com.pcmaster.AFK.paymentmanagement.domain.model.commands;
 
-public record CreatePaymentCommand(Long amount,
-                                   String currency,
-                                   String stripePaymentId,
+import com.pcmaster.AFK.paymentmanagement.domain.model.valueobjects.Currency;
+
+public record CreatePaymentCommand(int amount,
+                                   Currency currency,
                                    String status) {
 }
