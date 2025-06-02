@@ -13,6 +13,4 @@ public interface AdvisoryCommandService {
     Void handle(DeleteAdvisoryCommand command);
     Optional<Advisory> handle(UpdateAdvisoryCommand command);
 
-
-
 }
