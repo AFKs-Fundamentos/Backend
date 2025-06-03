@@ -1,5 +1,7 @@
 package com.pcmaster.AFK.product_management.aplication.internal.queryservices;
 
+import com.pcmaster.AFK.product_management.domain.model.queries.GetInventoryByProductIdQuery;
+import com.pcmaster.AFK.product_management.domain.model.valueobjects.ProductId;
 import org.springframework.stereotype.Service;
 import com.pcmaster.AFK.product_management.domain.model.aggregates.Inventory;
 import com.pcmaster.AFK.product_management.domain.model.queries.GetInventoryByIdQuery;
@@ -30,5 +32,10 @@ public class InventoryQueryServiceImpl implements InventoryQueryService {
     @Override
     public List<Inventory> handle(GetInventoryByUserIdQuery query) {
         return this.inventoryRepository.findByUserTechnicalId(new UserTechnicalId(query.userTechnicalId()));
+    }
+
+    @Override
+    public Optional<Inventory> handle(GetInventoryByProductIdQuery query) {
+        return this.inventoryRepository.findByProductId(new ProductId(query.productId()));
     }
 }
