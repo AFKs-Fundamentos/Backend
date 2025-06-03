@@ -19,6 +19,15 @@ public class ExternalInventoryService {
     public void deleteInventoryByProductId(Long productId) {
         inventoryContextFacade.deleteInventoryByProductId(productId);
     }
+    /**
+     * Checks if an inventory exists by product ID.
+     *
+     * @param productId the ID of the product to check
+     * @return true if the inventory exists, false otherwise
+     */
+    public boolean inventoryExistsByProductId(Long productId) {
+        return inventoryContextFacade.inventoryExistsByProductId(productId);
+    }
 
 
 }
