@@ -75,14 +75,19 @@ public class ProductCommandServiceImpl implements ProductCommandService {
         if (!this.productRepository.existsById(command.productId())) {
             throw new EntityNotFoundException("Product with id " + command.productId() + " does not exist");
         }
-        try {
-            this.productRepository.deleteById(command.productId());
-            // Delete the inventory associated with the product
-            //this.externalInventoryService.deleteInventoryByProductId(command.productId());
-
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Error while deleting product: " + e.getMessage());
+        if (this.externalInventoryService.inventoryExistsByProductId(command.productId())) {
+            try {
+                this.productRepository.deleteById(command.productId());
+                this.externalInventoryService.deleteInventoryByProductId(command.productId());
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Error while DELETING PRODUCT and INVENTORY: " + e.getMessage());
+            }
+        } else {
+            try {
+                this.productRepository.deleteById(command.productId());
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Error while DELETING PRODUCT: " + e.getMessage());
+            }
         }
-
     }
 }
