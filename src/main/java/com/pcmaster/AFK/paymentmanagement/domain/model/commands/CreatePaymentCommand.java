@@ -4,7 +4,7 @@ import com.pcmaster.AFK.paymentmanagement.domain.model.valueobjects.Currencies;
 
 public record CreatePaymentCommand(Long cartShoppingId,
                                    int amount,
-                                   Currencies currencies,
+                                   String currency,
                                    String status,
                                    String description,
                                    String receiptEmail) {

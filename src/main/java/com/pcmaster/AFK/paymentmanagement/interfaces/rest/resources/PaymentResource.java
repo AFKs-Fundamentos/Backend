@@ -6,7 +6,7 @@ import java.util.Date;
 
 public record PaymentResource(Long paymentId,
         int amount,
-        Currencies currencies,
+        String currency,
         String status,
         String description,
         String receiptEmail,

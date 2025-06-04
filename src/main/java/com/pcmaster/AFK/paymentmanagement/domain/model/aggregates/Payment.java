@@ -1,10 +1,9 @@
 package com.pcmaster.AFK.paymentmanagement.domain.model.aggregates;
 
 import com.pcmaster.AFK.paymentmanagement.domain.model.commands.CreatePaymentCommand;
+import com.pcmaster.AFK.paymentmanagement.domain.model.entities.Currency;
 import com.pcmaster.AFK.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import com.pcmaster.AFK.paymentmanagement.domain.model.valueobjects.Currencies;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,8 +18,10 @@ public class Payment extends AuditableAbstractAggregateRoot<Payment> {
 
     private int amount;
 
-    private Currencies currencies;
+    private Currency currency;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "currency_id", nullable = false)
     private String status;
 
     private String description;
@@ -33,13 +34,13 @@ public class Payment extends AuditableAbstractAggregateRoot<Payment> {
     private Date created;
 
     public Payment(int amount,
-                   Currencies currencies,
+                   Currency currency,
                    String status,
                    String description,
                    String receipt_email,
                    Date created) {
         this.amount = amount;
-        this.currencies = Currencies.USD;
+        this.currency = currency;
         this.status = status;
         this.description = description;
         this.receipt_email = receipt_email;
@@ -48,7 +49,7 @@ public class Payment extends AuditableAbstractAggregateRoot<Payment> {
 
     public Payment(CreatePaymentCommand command) {
         this.amount = command.amount();
-        this.currencies = command.currencies();
+        this.currency = Currency.toCurrencyFromName(command.currency());
         this.status = command.status();
         this.description = command.description();
         this.receipt_email = command.receiptEmail();
