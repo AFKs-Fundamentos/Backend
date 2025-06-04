@@ -7,6 +7,9 @@ public class CreatePaymentCommandFromResourceAssembler {
     public static CreatePaymentCommand toCommandFromResource(CreatePaymentResource resource){
         return new CreatePaymentCommand(resource.amount(),
                 resource.currency(),
-                resource.status());
+                resource.status(),
+                resource.description(),
+                resource.receiptEmail()
+                );
     }
 }

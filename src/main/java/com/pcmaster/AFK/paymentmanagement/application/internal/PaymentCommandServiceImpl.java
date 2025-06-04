@@ -10,6 +10,8 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -31,9 +33,26 @@ public class PaymentCommandServiceImpl implements PaymentCommandService {
         Map<String, Object> paymentIntentParams = new HashMap<>();
         paymentIntentParams.put("amount", command.amount());
         paymentIntentParams.put("currency", command.currency());
-        paymentIntentParams.put("payment_method_types", new String[]{"card"}); // Agr
+        paymentIntentParams.put("description", command.description());
+        paymentIntentParams.put("receipt_email", command.receiptEmail());
+        paymentIntentParams.put("payment_method_types", new String[]{"card"});
         try{
-            return PaymentIntent.create(paymentIntentParams);
+            PaymentIntent paymentIntent = PaymentIntent.create(paymentIntentParams);
+            // Convert Stripe timestamp to Date
+            long stripeTimestamp = paymentIntent.getCreated(); // Stripe timestamp in UNIX format
+            Date createdDate = Date.from(Instant.ofEpochSecond(stripeTimestamp));
+            // Save payment details in the database
+            Payment payment = new Payment(command);
+            payment.setAmount(command.amount());
+            payment.setCurrency(command.currency());
+            payment.setStripePaymentId(paymentIntent.getId());
+            payment.setStatus(paymentIntent.getStatus());
+            payment.setDescription(command.description());
+            payment.setReceipt_email(command.receiptEmail());
+            payment.setCreated(createdDate);
+            paymentRepository.save(payment);
+
+            return paymentIntent;
         } catch (StripeException e) {
             throw new IllegalArgumentException("Error creating payment intent: %s".formatted(e.getMessage()));
         }
@@ -49,6 +68,17 @@ public class PaymentCommandServiceImpl implements PaymentCommandService {
         Map<String, Object> params = new HashMap<>();
         params.put("payment_method", "pm_card_visa"); // Supported payment method, can be dynamic if required
         confirmedPaymentIntent.confirm(params);
+        // Update the payment in the database
+        Optional<Payment> paymentOptional = paymentRepository.findByStripePaymentId(paymentIntentId);
+        if (paymentOptional.isPresent()) {
+            Payment payment = paymentOptional.get();
+            payment.setStatus(confirmedPaymentIntent.getStatus());
+            payment.setDescription(confirmedPaymentIntent.getDescription());
+            payment.setReceipt_email(confirmedPaymentIntent.getReceiptEmail());
+            paymentRepository.save(payment);
+        } else {
+            throw new IllegalArgumentException("Payment with Stripe ID %s not found in the database".formatted(paymentIntentId));
+        }
         return confirmedPaymentIntent;
     }
 

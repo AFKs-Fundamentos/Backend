@@ -9,7 +9,10 @@ public class PaymentResourceFromEntityAssembler {
                 payment.getId(),
                 payment.getAmount(),
                 payment.getCurrency(),
-                payment.getStatus()
+                payment.getStatus(),
+                payment.getDescription(),
+                payment.getReceipt_email(),
+                payment.getCreated()
         );
     }
 }
