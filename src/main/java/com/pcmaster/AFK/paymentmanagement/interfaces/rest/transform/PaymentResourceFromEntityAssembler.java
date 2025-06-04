@@ -8,7 +8,7 @@ public class PaymentResourceFromEntityAssembler {
         return new PaymentResource(
                 payment.getId(),
                 payment.getAmount(),
-                payment.getCurrency(),
+                payment.getCurrencies(),
                 payment.getStatus(),
                 payment.getDescription(),
                 payment.getReceipt_email(),

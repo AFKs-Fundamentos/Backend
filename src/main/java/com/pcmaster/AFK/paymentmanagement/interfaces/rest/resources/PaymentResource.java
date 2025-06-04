@@ -1,13 +1,12 @@
 package com.pcmaster.AFK.paymentmanagement.interfaces.rest.resources;
 
-import com.pcmaster.AFK.paymentmanagement.domain.model.valueobjects.Currency;
+import com.pcmaster.AFK.paymentmanagement.domain.model.valueobjects.Currencies;
 
-import java.time.LocalTime;
 import java.util.Date;
 
 public record PaymentResource(Long paymentId,
         int amount,
-        Currency currency,
+        Currencies currencies,
         String status,
         String description,
         String receiptEmail,

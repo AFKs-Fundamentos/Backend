@@ -5,8 +5,8 @@ import com.pcmaster.AFK.paymentmanagement.interfaces.rest.resources.CreatePaymen
 
 public class CreatePaymentCommandFromResourceAssembler {
     public static CreatePaymentCommand toCommandFromResource(CreatePaymentResource resource){
-        return new CreatePaymentCommand(resource.amount(),
-                resource.currency(),
+        return new CreatePaymentCommand(resource.cartShoppingId(),resource.amount(),
+                resource.currencies(),
                 resource.status(),
                 resource.description(),
                 resource.receiptEmail()
