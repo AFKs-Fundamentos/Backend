@@ -4,6 +4,8 @@ import com.pcmaster.AFK.product_management.domain.model.queries.GetProductByIdQu
 import com.pcmaster.AFK.product_management.domain.services.ProductQueryService;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class ProductContextFacade {
     private final ProductQueryService productQueryService;
