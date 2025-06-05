@@ -51,7 +51,7 @@ public class PaymentCommandServiceImpl implements PaymentCommandService {
         var currency = this.currencyRepository.findByName(Currencies.valueOf(command.currency()))
                 .orElseThrow(() -> new IllegalArgumentException("Currency with name " + command.currency() + " not found"));
 
-        paymentIntentParams.put("amount", totalPrice);
+        paymentIntentParams.put("amount", totalPrice.intValue()); // Stripe expects amount in cents
         paymentIntentParams.put("currency", command.currency());
         paymentIntentParams.put("description", productNameOptional.get());
         paymentIntentParams.put("receipt_email", command.receiptEmail());
