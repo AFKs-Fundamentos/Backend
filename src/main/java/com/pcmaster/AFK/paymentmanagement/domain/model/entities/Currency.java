@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.With;
 
 @Entity
-@Table(name = "enrollment_statuses")
+@Table(name = "currencies")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -19,7 +19,7 @@ public class Currency {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "currency")
+    @Column(name = "name", length = 22)
     private Currencies name;
 
     public Currency(Currencies name) {
