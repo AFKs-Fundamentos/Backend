@@ -26,6 +26,7 @@ import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/api/v1/advisories", produces = APPLICATION_JSON_VALUE)
 @Tag(name="Advisory", description = "Advisory Management endpoints")
@@ -113,7 +114,7 @@ public class AdvisoryController {
     }
 
     @GetMapping({"/advisory/advisor/{advisorId}"})
-    @Operation(summary = "Get all advisories by customer id")
+    @Operation(summary = "Get all advisories by advisor id")
     @ApiResponses( value = {
             @ApiResponse(responseCode = "200", description = "Advisories found"),
             @ApiResponse(responseCode = "404", description = "Advisories not found")})
@@ -129,7 +130,7 @@ public class AdvisoryController {
     }
 
     @GetMapping({"/advisory/status/{status}"})
-    @Operation(summary = "Get all advisories by customer id")
+    @Operation(summary = "Get all advisories by status")
     @ApiResponses( value = {
             @ApiResponse(responseCode = "200", description = "Advisories found"),
             @ApiResponse(responseCode = "404", description = "Advisories not found")})
@@ -145,7 +146,7 @@ public class AdvisoryController {
     }
 
     @GetMapping({"/advisory/type/{type}"})
-    @Operation(summary = "Get all advisories by customer id")
+    @Operation(summary = "Get all advisories by advisory type")
     @ApiResponses( value = {
             @ApiResponse(responseCode = "200", description = "Advisories found"),
             @ApiResponse(responseCode = "404", description = "Advisories not found")})
