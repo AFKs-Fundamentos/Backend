@@ -18,10 +18,10 @@ public class Payment extends AuditableAbstractAggregateRoot<Payment> {
 
     private int amount;
 
-    private Currency currency;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "currency_id", nullable = false)
+    private Currency currency;
+
     private String status;
 
     private String description;

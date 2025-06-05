@@ -4,7 +4,9 @@ import com.pcmaster.AFK.paymentmanagement.application.internal.outboundservices.
 import com.pcmaster.AFK.paymentmanagement.config.StripeConfig;
 import com.pcmaster.AFK.paymentmanagement.domain.model.aggregates.Payment;
 import com.pcmaster.AFK.paymentmanagement.domain.model.commands.CreatePaymentCommand;
+import com.pcmaster.AFK.paymentmanagement.domain.model.valueobjects.Currencies;
 import com.pcmaster.AFK.paymentmanagement.domain.services.PaymentCommandService;
+import com.pcmaster.AFK.paymentmanagement.infrastructure.persistence.jpa.repositories.CurrencyRepository;
 import com.pcmaster.AFK.paymentmanagement.infrastructure.persistence.jpa.repositories.PaymentRepository;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
@@ -23,11 +25,13 @@ public class PaymentCommandServiceImpl implements PaymentCommandService {
     private final PaymentRepository paymentRepository;
     private final StripeConfig stripeConfig;
     private final ExternalCartShoppingService externalCartShoppingService;
+    private final CurrencyRepository currencyRepository;
 
-    public PaymentCommandServiceImpl(PaymentRepository paymentRepository, StripeConfig stripeConfig, ExternalCartShoppingService externalCartShoppingService) {
+    public PaymentCommandServiceImpl(PaymentRepository paymentRepository, StripeConfig stripeConfig, ExternalCartShoppingService externalCartShoppingService, CurrencyRepository currencyRepository) {
         this.paymentRepository = paymentRepository;
         this.stripeConfig = stripeConfig;
         this.externalCartShoppingService = externalCartShoppingService;
+        this.currencyRepository = currencyRepository;
     }
 
     @Override
@@ -43,8 +47,12 @@ public class PaymentCommandServiceImpl implements PaymentCommandService {
         if (productNameOptional.isEmpty()) {
             throw new IllegalArgumentException("Product name not found for cartShoppingId: " + command.cartShoppingId());
         }
-        paymentIntentParams.put("amount", totalPrice.intValue());
-        paymentIntentParams.put("currency", command.currencies());
+
+        var currency = this.currencyRepository.findByName(Currencies.valueOf(command.currency()))
+                .orElseThrow(() -> new IllegalArgumentException("Currency with name " + command.currency() + " not found"));
+
+        paymentIntentParams.put("amount", totalPrice);
+        paymentIntentParams.put("currency", command.currency());
         paymentIntentParams.put("description", productNameOptional.get());
         paymentIntentParams.put("receipt_email", command.receiptEmail());
         paymentIntentParams.put("payment_method_types", new String[]{"card"});
@@ -56,7 +64,7 @@ public class PaymentCommandServiceImpl implements PaymentCommandService {
             // Save payment details in the database
             Payment payment = new Payment(command);
             payment.setAmount(totalPrice.intValue());
-            payment.setCurrencies(command.currencies());
+            payment.setCurrency(currency);
             payment.setStripePaymentId(paymentIntent.getId());
             payment.setStatus(paymentIntent.getStatus());
             payment.setDescription(productNameOptional.get());
